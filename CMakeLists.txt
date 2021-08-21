@@ -2,17 +2,27 @@ cmake_minimum_required(VERSION 3.17)
 project(CurlBuild)
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(OpenSSL)
+include(CMake/CPM.cmake)
+
+CPMAddPackage(
+        NAME openssl_source
+        GIT_REPOSITORY git@github.com:openssl/openssl.git
+        GIT_TAG OpenSSL_1_1_1-stable)
+
 option(BUILD_SHARED_LIBS "SharedLibs" OFF)
+
+set(OPENSSL_INCLUDE_DIR ${openssl_source_SOURCE_DIR}/include CACHE INTERNAL "")
+include_directories(${OPENSSL_INCLUDE_DIR})
+
+set(SSL_DIR ${CMAKE_CURRENT_LIST_DIR}/OpenSSL)
+find_library(OPENSSL_SSL_LIBRARY ssl HINTS ${SSL_DIR})
+find_library(OPENSSL_CRYPTO_LIBRARY crypto HINTS ${SSL_DIR})
 
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9" CACHE STRING "Minimum OS X deployment version" FORCE)
 set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE INTERNAL "")
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
-if(APPLE)
-    if (NOT OPENSSL_FOUND)
-        set(OPENSSL_ROOT_DIR /opt/homebrew/opt/openssl)
-    endif()
-endif()
-
-include(CMake/FindCurl.cmake)
+CPMAddPackage(
+        NAME curl
+        GIT_REPOSITORY git@github.com:curl/curl.git
+        GIT_TAG origin/master)
