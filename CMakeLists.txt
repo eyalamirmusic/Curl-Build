@@ -12,11 +12,15 @@ CPMAddPackage(
 option(BUILD_SHARED_LIBS "SharedLibs" OFF)
 
 set(OPENSSL_INCLUDE_DIR ${openssl_source_SOURCE_DIR}/include CACHE INTERNAL "")
-include_directories(${OPENSSL_INCLUDE_DIR})
 
 set(SSL_DIR ${CMAKE_CURRENT_LIST_DIR}/OpenSSL)
 find_library(OPENSSL_SSL_LIBRARY ssl HINTS ${SSL_DIR})
 find_library(OPENSSL_CRYPTO_LIBRARY crypto HINTS ${SSL_DIR})
+
+if(APPLE)
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/Sources/opensslconf.h
+            DESTINATION ${OPENSSL_INCLUDE_DIR}/openssl)
+endif()
 
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9" CACHE STRING "Minimum OS X deployment version" FORCE)
 set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE INTERNAL "")
