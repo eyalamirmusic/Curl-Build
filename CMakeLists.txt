@@ -11,6 +11,9 @@ CPMAddPackage(
 
 option(BUILD_SHARED_LIBS "SharedLibs" OFF)
 option(CURL_DISABLE_LDAP "Disable LDAP" ON)
+option(CURL_STATIC_CRT "Set to ON to build libcurl with static CRT on Windows (/MT)." ON)
+
+add_definitions(-DCURL_STATICLIB=1)
 
 set(OPENSSL_INCLUDE_DIR ${openssl_source_SOURCE_DIR}/include CACHE INTERNAL "")
 
