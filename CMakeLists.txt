@@ -10,6 +10,7 @@ CPMAddPackage(
         GIT_TAG OpenSSL_1_1_1-stable)
 
 option(BUILD_SHARED_LIBS "SharedLibs" OFF)
+option(CURL_DISABLE_LDAP "Disable LDAP" ON)
 
 set(OPENSSL_INCLUDE_DIR ${openssl_source_SOURCE_DIR}/include CACHE INTERNAL "")
 
@@ -25,6 +26,11 @@ endif()
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9" CACHE STRING "Minimum OS X deployment version" FORCE)
 set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE INTERNAL "")
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
+CPMAddPackage(
+        NAME zlib
+        GIT_REPOSITORY git@github.com:madler/zlib.git
+        GIT_TAG origin/master)
 
 CPMAddPackage(
         NAME curl
