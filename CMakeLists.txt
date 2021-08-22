@@ -18,10 +18,15 @@ set(SSL_DIR ${CMAKE_CURRENT_LIST_DIR}/OpenSSL)
 find_library(OPENSSL_SSL_LIBRARY ssl HINTS ${SSL_DIR})
 find_library(OPENSSL_CRYPTO_LIBRARY crypto HINTS ${SSL_DIR})
 
-if(APPLE)
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/Sources/opensslconf.h
-            DESTINATION ${OPENSSL_INCLUDE_DIR}/openssl)
-endif()
+set(SOURCE_CONF_DIR Sources/Win)
+
+if (APPLE)
+    set(SOURCE_CONF_DIR Sources/Mac)
+endif ()
+
+file(COPY ${SOURCE_CONF_DIR}/opensslconf.h
+        DESTINATION ${OPENSSL_INCLUDE_DIR}/openssl)
+
 
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9" CACHE STRING "Minimum OS X deployment version" FORCE)
 set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE INTERNAL "")
