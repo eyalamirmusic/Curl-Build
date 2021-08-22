@@ -11,7 +11,6 @@ CPMAddPackage(
 
 option(BUILD_SHARED_LIBS "SharedLibs" OFF)
 option(CURL_DISABLE_LDAP "Disable LDAP" ON)
-option(CURL_STATIC_CRT "Set to ON to build libcurl with static CRT on Windows (/MT)." ON)
 
 add_definitions(-DCURL_STATICLIB=1)
 
@@ -30,10 +29,13 @@ endif ()
 file(COPY ${SOURCE_CONF_DIR}/opensslconf.h
         DESTINATION ${OPENSSL_INCLUDE_DIR}/openssl)
 
-
-set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9" CACHE STRING "Minimum OS X deployment version" FORCE)
-set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE INTERNAL "")
-set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+if (APPLE)
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9" CACHE STRING "Minimum OS X deployment version" FORCE)
+    set(CMAKE_OSX_ARCHITECTURES "x86_64;arm64" CACHE INTERNAL "")
+else()
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    option(CURL_STATIC_CRT "Set to ON to build libcurl with static CRT on Windows (/MT)." ON)
+endif()
 
 CPMAddPackage(
         NAME zlib
